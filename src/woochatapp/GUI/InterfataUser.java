@@ -4,27 +4,27 @@
  * and open the template in the editor.
  */
 package woochatapp.GUI;
+import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import woochatapp.login.Login;
 import woochatapp.user.User;
@@ -61,15 +61,10 @@ public class InterfataUser extends javax.swing.JFrame{
         }
     }
     private String loggedName;
-    /*public InterfataUser() throws FileNotFoundException, IOException{
-        initComponents();
-        BufferedReader buff = new BufferedReader(new FileReader("E:\\DSChatApp\\WooChatApp\\WooChatApp\\src\\woochatapp\\login\\LoggedInfo.txt")); //change the path
-         {
-            loggedName = buff.readLine();
-            userLoggedName.setText(loggedName);
-        }
-        ArrayList<User> users = new ArrayList();
-    }*/
+    private String emailinitiator;
+    private String emailreceptor;
+    private int idconv;
+    
   
     /**
      * This method is called from within the constructor to initialize the form.
@@ -80,36 +75,39 @@ public class InterfataUser extends javax.swing.JFrame{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         userLoggedName = new javax.swing.JLabel();
         userTextLabel = new javax.swing.JLabel();
-        searchButton = new javax.swing.JButton();
-        searchInputField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        searchButton = new javax.swing.JButton();
+        searchInputField = new javax.swing.JTextField();
         openConversation = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
         addPhotoButton = new javax.swing.JButton();
         sendButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        button2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 640));
-        setSize(new java.awt.Dimension(800, 640));
+        setTitle("WooChatApp");
+        setBackground(new java.awt.Color(102, 102, 102));
+        setPreferredSize(new java.awt.Dimension(1140, 500));
+        setResizable(false);
+        setSize(new java.awt.Dimension(1140, 500));
 
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1122, 500));
+
+        userLoggedName.setBackground(new java.awt.Color(102, 102, 102));
         userLoggedName.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        userLoggedName.setText("jLabel1");
+        userLoggedName.setForeground(new java.awt.Color(255, 255, 255));
+        userLoggedName.setText("Nume - prenume user");
 
+        userTextLabel.setBackground(new java.awt.Color(102, 102, 102));
+        userTextLabel.setForeground(new java.awt.Color(102, 102, 102));
         userTextLabel.setText(" List of users");
-
-        searchButton.setText("Cauta");
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
-            }
-        });
-
-        searchInputField.setText("Cauta utilizator...");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -168,18 +166,21 @@ public class InterfataUser extends javax.swing.JFrame{
         });
         jScrollPane1.setViewportView(jTable1);
 
+        searchButton.setText("Cauta");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
+        searchInputField.setText("Cauta utilizator...");
+
         openConversation.setText("Deschide conversatia");
         openConversation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openConversationActionPerformed(evt);
             }
         });
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setEnabled(false);
-        jScrollPane2.setViewportView(jTextArea1);
 
         jTextField1.setText("Trimite mesaj...");
         jTextField1.setEnabled(false);
@@ -189,7 +190,7 @@ public class InterfataUser extends javax.swing.JFrame{
             }
         });
 
-        addPhotoButton.setText("Add photo");
+        addPhotoButton.setText("Receive msg");
         addPhotoButton.setEnabled(false);
         addPhotoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -205,164 +206,203 @@ public class InterfataUser extends javax.swing.JFrame{
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setEnabled(false);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        button2.setText("jButton1");
+        button2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(userLoggedName)
-                    .addComponent(userTextLabel)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(searchButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(openConversation, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addPhotoButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2))
-                .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(userTextLabel)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(searchButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(openConversation, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addPhotoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(userLoggedName)
                 .addGap(18, 18, 18)
                 .addComponent(userTextLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1)
-                            .addComponent(addPhotoButton)
-                            .addComponent(sendButton)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(searchButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(openConversation)
                     .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(openConversation))
-                .addGap(17, 17, 17))
+                    .addComponent(searchButton)
+                    .addComponent(jTextField1)
+                    .addComponent(addPhotoButton)
+                    .addComponent(sendButton)
+                    .addComponent(button2))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    public ArrayList<User> afiseazaUseri(String cautare){
-        ArrayList<User> users = new ArrayList<User>();
-        System.out.println("merge array list");
-        ResultSet rs;
-        Statement st;
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+        // TODO add your handling code here:
+
+        System.out.println(this.emailinitiator+" "+this.emailreceptor);
+
         try{
-            System.out.println("merge try");
-            Connection con = getConnection();
-            System.out.println("Conexiune realizata");
-            st = con.createStatement();
-            String query = "SELECT * FROM dxm4AFuYMf.users WHERE CONCAT(`nume`, `prenume`, `email`) LIKE '%"+cautare+"%'";
-            rs = st.executeQuery(query);
-            User user=null;
-            System.out.println("merge User user");
-            while (rs.next()){
-                user = new User();
-                System.out.println(user.getNume());
-                user.setNume(rs.getString("nume"));
-                System.out.println(user.getPrenume());
-                user.setPrenume(rs.getString("prenume"));
-                System.out.println(user.getEmail());
-                user.setEmail(rs.getString("email"));
-                System.out.println("merge User=new User");
-                System.out.println(rs.getString("nume").toString()+rs.getString("prenume").toString()+rs.getString("email").toString());
-                users.add(user);
+            Connection con=null;
+            ResultSet rs;
+            PreparedStatement pst;
+            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
+            String query = "SELECT * FROM dxm4AFuYMf.conversations WHERE (emailinitiator = ? AND emailreceptor = ?) OR (emailinitiator = ? AND emailreceptor = ?) ";
+            pst = con.prepareStatement(query);
+            pst.setString(1, this.emailinitiator);
+            pst.setString(2, this.emailreceptor);
+            pst.setString(3, this.emailreceptor);
+            pst.setString(4, this.emailinitiator);
+            rs = pst.executeQuery();
+            if(rs.next())
+            {
+                this.idconv = rs.getInt("idconv");
             }
-        }catch (Exception e){
+        }catch(Exception e)
+        {
             System.out.println(e.getMessage());
         }
-        return users;
-    }
-    public void gasesteUseri(){
-        ArrayList<User> utilizatoriGasiti = afiseazaUseri(searchInputField.getText());
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"nume","prenume","email"});
-        Object[] randuri = new Object[3];
-        for(int i=0;i<utilizatoriGasiti.size();i++){
-            randuri[0]=utilizatoriGasiti.get(i).getNume();
-            randuri[1]=utilizatoriGasiti.get(i).getPrenume();
-            randuri[2]=utilizatoriGasiti.get(i).getEmail();
-            System.out.println(randuri[0]);
-            model.addRow(randuri);
+        try {
+            Connection con;
+            PreparedStatement pst;
+            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
+            String queryInsert = "INSERT INTO messages (scriitor, idconversatie, mesaj) VALUES(?, ?, ?)";
+            PreparedStatement stmtInser = con.prepareStatement(queryInsert);
+            System.out.println(this.emailinitiator+" "+this.emailreceptor);
+
+            stmtInser.setString(1,this.emailinitiator);
+            stmtInser.setInt(2, this.idconv);
+            stmtInser.setString(3,jTextField1.getText().toString());
+            stmtInser.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        jTable1.setModel(model);
-    }   
-    public Connection getConnection(){
-        Connection con = null;
-        try{
-            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf","dxm4AFuYMf","sdsKcU3uUv");
-        
-        }catch(Exception el){
-            System.out.println(el.getMessage());
-        }
-        return con;
-    }
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        jTextField1.setText(" ");
+    }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void addPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPhotoButtonActionPerformed
         // TODO add your handling code here:
-        gasesteUseri();
-    }//GEN-LAST:event_searchButtonActionPerformed
+        try{
+            jTextArea1.setText("");
+            Connection con;
+            ResultSet rs;
+            PreparedStatement pst;
+            String conversatie = null;
+            String textAfisat = null;
+            String user = null;
+            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
+            String query = "SELECT * FROM dxm4AFuYMf.messages WHERE idconversatie=?";
+            pst = con.prepareStatement(query);
+            pst.setInt(1,this.idconv);
+            rs = pst.executeQuery();
+            while(rs.next())
+            {
+                user = rs.getNString("scriitor");
+                textAfisat= rs.getNString("mesaj");
+                conversatie = user + ":" + textAfisat + "\n";
+                jTextArea1.append(conversatie);
+            }
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_addPhotoButtonActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void openConversationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openConversationActionPerformed
         // TODO add your handling code here:
         boolean convIncep = false;
         int row = jTable1.getSelectedRow();
         int column = jTable1.getSelectedColumn();
-        String emailreceptor = (String)jTable1.getValueAt(row,column);
-        System.out.println("---0"+emailreceptor+"-----");
-        File file = new File("C:\\Users\\Cata\\Desktop\\LoggedInfo.txt");
+        this.emailreceptor = (String)jTable1.getValueAt(row,column);
+        File file = new File("C:\\Users\\Cata\\Desktop\\LoggedEmailInfo.txt");
         Scanner sc=null;
         try {
             sc = new Scanner(file);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(InterfataUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sc.nextLine();
-        String emailinitiator = sc.next();
+        this.emailinitiator = sc.next();
+        System.out.println(this.emailinitiator+" "+this.emailreceptor);
         ResultSet rs;
         PreparedStatement pst;
         try{
             Connection con=null;
-            System.out.println("merge try");
             con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
-            System.out.println("Conexiune realizata");
-            System.out.println(emailinitiator);
-            System.out.println(emailreceptor);
             String query = "SELECT * FROM dxm4AFuYMf.conversations "
-                    + "WHERE emailinitiator LIKE '%"+emailinitiator+"%' "
-                    + "AND emailreceptor LIKE '%"+emailreceptor+"%' "
-                    + "OR emailinitiator LIKE '%"+emailreceptor+"%' "
-                    + "AND emailreceptor LIKE '%"+emailinitiator+"%'";
-            System.out.println("merge select");
+            + "WHERE (emailinitiator LIKE '%"+this.emailinitiator+"%' "
+            + "AND emailreceptor LIKE '%"+this.emailreceptor+"%' "
+            + ") OR (emailinitiator LIKE '%"+this.emailreceptor+"%' "
+            + "AND emailreceptor LIKE '%"+this.emailinitiator+"%')";
             pst = con.prepareStatement(query);
             rs = pst.executeQuery();
-            /*if(rs.next())
+            if(rs.next())
             {
-                if((rs.getNString(emailinitiator).equals(emailinitiator) && rs.getNString(emailreceptor).equals(emailreceptor)) || ((rs.getNString(emailreceptor).equals(emailreceptor) & rs.getNString(emailinitiator).equals(emailinitiator))))
+                if((rs.getNString("emailinitiator").equals(emailinitiator) & rs.getNString("emailreceptor").equals(emailreceptor)) | ((rs.getNString("emailinitiator").equals(emailreceptor) & rs.getNString("emailreceptor").equals(emailinitiator))))
                 convIncep = true;
-            }*/
-            //if(convIncep = false){
-                System.out.println("a intrat aici");
-                if(!(jTable1.getSelectionModel().isSelectionEmpty())){
+                else convIncep=false;
+            }
+            if(!convIncep)
+            {
+                System.out.println("Conversatia nu exista, deci se va creea...");
+                if(!(jTable1.getSelectionModel().isSelectionEmpty()))
+                {
                     jTextArea1.setVisible(true);
                     addPhotoButton.setVisible(true);
                     sendButton.setVisible(true);
@@ -372,104 +412,106 @@ public class InterfataUser extends javax.swing.JFrame{
                     sendButton.setEnabled(true);
                     jTextField1.setEnabled(true);
                     String queryInsert = "INSERT INTO conversations (nume, emailinitiator, emailreceptor) VALUES(?, ?, ?)";
-                    System.out.println("merge insert");
                     PreparedStatement stmtInser = con.prepareStatement(queryInsert);
-                    stmtInser.setString(1, emailinitiator+", "+emailreceptor);
-                    stmtInser.setString(2, emailinitiator);
-                    stmtInser.setString(3, emailreceptor);
+                    stmtInser.setString(1, this.emailinitiator+", "+this.emailreceptor);
+                    stmtInser.setString(2, this.emailinitiator);
+                    stmtInser.setString(3, this.emailreceptor);
                     stmtInser.executeUpdate();
-                    
                 }
-                con.close();
-            //}
-            /*if(convIncep = true){
-                    jTextArea1.setVisible(true);
-                    addPhotoButton.setVisible(true);
-                    sendButton.setVisible(true);
-                    jTextField1.setVisible(true);
-                    jTextArea1.setEnabled(true);
-                    addPhotoButton.setEnabled(true);
-                    sendButton.setEnabled(true);
-                    jTextField1.setEnabled(true);
-                    
-            } */
+            }
+            if(convIncep)
+            {
+                System.out.println("Conversatia exista deja...");
+                jTextArea1.setVisible(true);
+                addPhotoButton.setVisible(true);
+                sendButton.setVisible(true);
+                jTextField1.setVisible(true);
+                jTextArea1.setEnabled(true);
+                addPhotoButton.setEnabled(true);
+                sendButton.setEnabled(true);
+                jTextField1.setEnabled(true);
+            }
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_openConversationActionPerformed
 
-    private void addPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPhotoButtonActionPerformed
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
-        try{
-            Connection con;
-            ResultSet rs;
-            PreparedStatement pst;
-            String conversatie = null;
-            String textAfisat = null;
-            String user = null;
-            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
-            String query = "SELECT * FROM dxm4AFuYMf.messages";
-            pst = con.prepareStatement(query);
-            rs = pst.executeQuery();
-            while(rs.next())
-            {
-               user = rs.getNString("scriitor");
-               textAfisat= rs.getNString("mesaj");
-               conversatie = user + " " + textAfisat + "\n";
-            }
-            System.out.println("-------------\n" +conversatie);
-            jTextArea1.setText(conversatie);
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-    }//GEN-LAST:event_addPhotoButtonActionPerformed
+        gasesteUseri();
+    }//GEN-LAST:event_searchButtonActionPerformed
 
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
         // TODO add your handling code here:
-        
-        int idconv=0;
-        String scriitor = null;
-        String mesaj = null;
+         JFileChooser fileChooser = new JFileChooser();
+         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.IMAGE", "jpg","gif","png");
+         fileChooser.addChoosableFileFilter(filter);
+         int result = fileChooser.showSaveDialog(null);
+         if(result == JFileChooser.APPROVE_OPTION){
+             File selectedFile = fileChooser.getSelectedFile();
+             String path = selectedFile.getAbsolutePath();
+              }
+         else if(result == JFileChooser.CANCEL_OPTION){
+             System.out.println("No Data");
+         }
         try{
-            Connection con=null;  
-            ResultSet rs;
-            PreparedStatement pst;
-            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
-            String query = "SELECT * FROM dxm4AFuYMf.conversations";
-            pst = con.prepareStatement(query);
-            rs = pst.executeQuery();
-            mesaj = jTextField1.getText().toString();
-            if(rs.next())
-            {
-                scriitor = rs.getNString("emailinitiator");
-                idconv = rs.getInt("idconv");
-            }
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        try {
-            Connection con;
-            PreparedStatement pst;
-            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
-                String queryInsert = "INSERT INTO messages (scriitor, idconversatie, mesaj) VALUES(?, ?, ?)";
-                System.out.println("Macar mergeinsertul?!?!");
-                PreparedStatement stmtInser = con.prepareStatement(queryInsert);
-                stmtInser.setString(1,scriitor);
-                stmtInser.setInt(2, idconv);
-                stmtInser.setString(3, mesaj);
-                stmtInser.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        
-    }//GEN-LAST:event_sendButtonActionPerformed
+               Connection con = DriverManager.getConnection("jdbc:mysql://localhost/db_images","root","");
+               PreparedStatement ps = con.prepareStatement("insert into myimages(ID,Name,Description,Image) values(?,?,?,?)");
+               InputStream is = new FileInputStream(new File(s));
+               ps.setString(1, textID.getText());
+               ps.setString(2, textNAME.getText());
+               ps.setString(3, area.getText());
+               ps.setBlob(4,is);
+               ps.executeUpdate();
+               JOptionPane.showMessageDialog(null, "Data Inserted");
+           }catch(Exception ex){
+               ex.printStackTrace();
+           }
+    }//GEN-LAST:event_button2ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
     
+    public ArrayList<User> afiseazaUseri(String cautare){
+        ArrayList<User> users = new ArrayList<User>();
+        ResultSet rs;
+        Statement st;
+        try{
+            Connection con = getConnection();
+            st = con.createStatement();
+            String query = "SELECT * FROM dxm4AFuYMf.users WHERE CONCAT(`nume`, `prenume`, `email`) LIKE '%"+cautare+"%'";
+            rs = st.executeQuery(query);
+            User user=null;
+            while (rs.next()){
+                user = new User();
+                users.add(user);
+                user.setEmail(rs.getString("email"));
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return users;
+    }
+    public void gasesteUseri(){
+        ArrayList<User> utilizatoriGasiti = afiseazaUseri(searchInputField.getText());
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"email"});
+        Object[] randuri = new Object[1];
+        for(int i=0;i<utilizatoriGasiti.size();i++){
+            randuri[0]=utilizatoriGasiti.get(i).getEmail();
+            model.addRow(randuri);
+        }
+        jTable1.setModel(model);
+    }   
+    public Connection getConnection(){
+        Connection con = null;
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
+        
+        }catch(Exception el){
+            System.out.println(el.getMessage());
+        }
+        return con;
+    }    
     /**
      * @param args the command line arguments
      */
@@ -514,6 +556,8 @@ public class InterfataUser extends javax.swing.JFrame{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPhotoButton;
+    private javax.swing.JButton button2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
@@ -527,6 +571,4 @@ public class InterfataUser extends javax.swing.JFrame{
     private javax.swing.JLabel userTextLabel;
     // End of variables declaration//GEN-END:variables
 
-    
-    
 }

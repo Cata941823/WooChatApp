@@ -5,6 +5,7 @@
  */
 package woochatapp.login;
 
+import java.awt.Toolkit;
 import java.io.FileWriter;
 import woochatapp.GUI.InterfataUser;
 import java.sql.Connection;
@@ -26,6 +27,7 @@ public class Login extends javax.swing.JFrame {
     PreparedStatement pst = null;
     private String loggedName; 
     private String loggedSurname;
+    private String loggedEmail;
 
     public String getLoggedName() {
         return loggedName;
@@ -41,6 +43,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        seticon();
     }
 
     /**
@@ -66,6 +69,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("WooChatApp");
         setBackground(new java.awt.Color(51, 51, 51));
         setLocation(new java.awt.Point(300, 300));
         setResizable(false);
@@ -193,8 +197,12 @@ public class Login extends javax.swing.JFrame {
             .addComponent(Login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        pack();
+        setSize(new java.awt.Dimension(747, 446));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    private void seticon() {
+     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("wooIcon.png")));
+    }
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
         // TODO add your handling code here:
@@ -221,12 +229,15 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Logarea a fost facuta cu succes!");
                 loggedName = rs.getString("nume");
                 loggedSurname = rs.getString("prenume");
-                String loggedEmail = rs.getString("email");
+                loggedEmail = rs.getString("email");
                 String loggedPass = rs.getString("parola");
                 System.out.println(loggedEmail+" "+loggedPass);
                 FileWriter loggedInfo = new FileWriter("C:\\Users\\Cata\\Desktop\\LoggedInfo.txt",false);//change the path
-                loggedInfo.write(loggedName+" "+loggedSurname+"\n"+loggedEmail);
+                loggedInfo.write(loggedName+" "+loggedSurname);
                 loggedInfo.close();
+                FileWriter loggedEmailInfo = new FileWriter("C:\\Users\\Cata\\Desktop\\LoggedEmailInfo.txt",false);//change the path
+                loggedEmailInfo.write(loggedEmail);
+                loggedEmailInfo.close();
                 InterfataUser interfata = new InterfataUser();
                 interfata.setVisible(true);
                 this.setVisible(false);
