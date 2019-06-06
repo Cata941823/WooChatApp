@@ -4,12 +4,15 @@
  * and open the template in the editor.
  */
 package woochatapp.GUI;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -35,16 +39,24 @@ import woochatapp.user.User;
  */
 public class InterfataUser extends javax.swing.JFrame{
 
+    String numeFisier = null;
+    byte[] imagineDeTrimis = null;
+    ArrayList<Image> listaImagini = null;
+    int count=0;
     /**
      * Creates new form InterfataUser
      */
     public InterfataUser() throws SQLException{
     try{
         initComponents();
+            NextPhoto.setVisible(false);
+            button2.setVisible(false);
+            DisplayImages.setVisible(false);
             jTextArea1.setVisible(false);
             addPhotoButton.setVisible(false);
             sendButton.setVisible(false);
             jTextField1.setVisible(false);
+            NextPhoto.setEnabled(false);
             jTextArea1.setEnabled(false);
             addPhotoButton.setEnabled(false);
             sendButton.setEnabled(false);
@@ -89,6 +101,9 @@ public class InterfataUser extends javax.swing.JFrame{
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         button2 = new javax.swing.JButton();
+        DisplayImages = new javax.swing.JButton();
+        label = new javax.swing.JLabel();
+        NextPhoto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WooChatApp");
@@ -212,10 +227,27 @@ public class InterfataUser extends javax.swing.JFrame{
         jTextArea1.setEnabled(false);
         jScrollPane2.setViewportView(jTextArea1);
 
-        button2.setText("jButton1");
+        button2.setText("Send Photo");
+        button2.setEnabled(false);
         button2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button2ActionPerformed(evt);
+            }
+        });
+
+        DisplayImages.setText("Display Images");
+        DisplayImages.setEnabled(false);
+        DisplayImages.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DisplayImagesActionPerformed(evt);
+            }
+        });
+
+        NextPhoto.setText("NEXT");
+        NextPhoto.setEnabled(false);
+        NextPhoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NextPhotoActionPerformed(evt);
             }
         });
 
@@ -229,9 +261,11 @@ public class InterfataUser extends javax.swing.JFrame{
                     .addComponent(userLoggedName)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(userTextLabel)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(userTextLabel))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(searchButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -240,44 +274,70 @@ public class InterfataUser extends javax.swing.JFrame{
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(button2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addPhotoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(11, 11, 11)
-                                .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(addPhotoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                            .addComponent(DisplayImages, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(133, 133, 133)
+                                .addComponent(NextPhoto)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(userLoggedName)
-                .addGap(18, 18, 18)
-                .addComponent(userTextLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE))
-                .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(openConversation)
-                    .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton)
-                    .addComponent(jTextField1)
-                    .addComponent(addPhotoButton)
-                    .addComponent(sendButton)
-                    .addComponent(button2))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(userTextLabel)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(NextPhoto)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchButton)
+                            .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(openConversation))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sendButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addPhotoButton))
+                        .addGap(3, 3, 3)
+                        .addComponent(DisplayImages)
+                        .addContainerGap(24, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1602, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,6 +349,65 @@ public class InterfataUser extends javax.swing.JFrame{
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void DisplayImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DisplayImagesActionPerformed
+        // TODO add your handling code here:
+        listaImagini=null;
+        try{
+            Connection con = getConnection();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("Select * FROM images where idconv = '"+this.idconv+"' AND idpoza='"+this.idconv+"'");
+            listaImagini = new ArrayList<>();
+            while(rs.next())
+            {
+                byte[] img = rs.getBytes("image");
+                ImageIcon image = new ImageIcon(img);
+                Image in = image.getImage();
+                listaImagini.add(in);
+            }   
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_DisplayImagesActionPerformed
+
+    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        numeFisier =  f.getAbsolutePath();
+        //ImageIcon imageIcon = new ImageIcon(new ImageIcon(this.numeFisier).getImage().getScaledInstance(lb1_img.getWidth(),lb1_img.getHeight(),Image.SCALE_SMOOTH));
+        try{
+            File image = new File(numeFisier);
+            FileInputStream fin = new FileInputStream(image);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            for(int readNum; (readNum=fin.read(buf))!=-1;){
+                bos.write(buf,0,readNum);
+
+            }
+            imagineDeTrimis = bos.toByteArray();
+
+            Connection con;
+            PreparedStatement pst;
+            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
+            String queryInsert = "INSERT INTO images (idconv, idpoza, image) VALUES(?, ?, ?)";
+            System.out.println("merge inserare imagine");
+            PreparedStatement stmtInser = con.prepareStatement(queryInsert);
+
+            stmtInser.setInt(1, this.idconv);
+            stmtInser.setInt(2, this.idconv);
+            stmtInser.setBytes(3,imagineDeTrimis);
+            stmtInser.executeUpdate();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(InterfataUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(InterfataUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(Exception ex){
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_button2ActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
@@ -352,7 +471,7 @@ public class InterfataUser extends javax.swing.JFrame{
             {
                 user = rs.getNString("scriitor");
                 textAfisat= rs.getNString("mesaj");
-                conversatie = user + ":" + textAfisat + "\n";
+                conversatie = user + ": " + textAfisat + "\n";
                 jTextArea1.append(conversatie);
             }
         }catch(Exception e)
@@ -403,10 +522,16 @@ public class InterfataUser extends javax.swing.JFrame{
                 System.out.println("Conversatia nu exista, deci se va creea...");
                 if(!(jTable1.getSelectionModel().isSelectionEmpty()))
                 {
+                    NextPhoto.setVisible(true);
+                    button2.setVisible(true);
+                    DisplayImages.setVisible(true);
                     jTextArea1.setVisible(true);
                     addPhotoButton.setVisible(true);
                     sendButton.setVisible(true);
                     jTextField1.setVisible(true);
+                    NextPhoto.setEnabled(true);
+                    button2.setEnabled(true);
+                    DisplayImages.setEnabled(true);
                     jTextArea1.setEnabled(true);
                     addPhotoButton.setEnabled(true);
                     sendButton.setEnabled(true);
@@ -422,10 +547,16 @@ public class InterfataUser extends javax.swing.JFrame{
             if(convIncep)
             {
                 System.out.println("Conversatia exista deja...");
+                NextPhoto.setVisible(true);
+                button2.setVisible(true);
+                DisplayImages.setVisible(true);
                 jTextArea1.setVisible(true);
                 addPhotoButton.setVisible(true);
                 sendButton.setVisible(true);
                 jTextField1.setVisible(true);
+                NextPhoto.setEnabled(true);
+                button2.setEnabled(true);
+                DisplayImages.setEnabled(true);
                 jTextArea1.setEnabled(true);
                 addPhotoButton.setEnabled(true);
                 sendButton.setEnabled(true);
@@ -441,34 +572,16 @@ public class InterfataUser extends javax.swing.JFrame{
         gasesteUseri();
     }//GEN-LAST:event_searchButtonActionPerformed
 
-    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
+    private void NextPhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextPhotoActionPerformed
         // TODO add your handling code here:
-         JFileChooser fileChooser = new JFileChooser();
-         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.IMAGE", "jpg","gif","png");
-         fileChooser.addChoosableFileFilter(filter);
-         int result = fileChooser.showSaveDialog(null);
-         if(result == JFileChooser.APPROVE_OPTION){
-             File selectedFile = fileChooser.getSelectedFile();
-             String path = selectedFile.getAbsolutePath();
-              }
-         else if(result == JFileChooser.CANCEL_OPTION){
-             System.out.println("No Data");
-         }
-        try{
-               Connection con = DriverManager.getConnection("jdbc:mysql://localhost/db_images","root","");
-               PreparedStatement ps = con.prepareStatement("insert into myimages(ID,Name,Description,Image) values(?,?,?,?)");
-               InputStream is = new FileInputStream(new File(s));
-               ps.setString(1, textID.getText());
-               ps.setString(2, textNAME.getText());
-               ps.setString(3, area.getText());
-               ps.setBlob(4,is);
-               ps.executeUpdate();
-               JOptionPane.showMessageDialog(null, "Data Inserted");
-           }catch(Exception ex){
-               ex.printStackTrace();
-           }
-    }//GEN-LAST:event_button2ActionPerformed
+        if(count<listaImagini.size())
+        {
+        Image myImg = listaImagini.get(count).getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
+        ImageIcon newImage = new ImageIcon(myImg);
+        label.setIcon(newImage);
+        count++;
+        }
+    }//GEN-LAST:event_NextPhotoActionPerformed
 
     
     public ArrayList<User> afiseazaUseri(String cautare){
@@ -555,6 +668,8 @@ public class InterfataUser extends javax.swing.JFrame{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton DisplayImages;
+    private javax.swing.JButton NextPhoto;
     private javax.swing.JButton addPhotoButton;
     private javax.swing.JButton button2;
     private javax.swing.JPanel jPanel1;
@@ -563,6 +678,7 @@ public class InterfataUser extends javax.swing.JFrame{
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel label;
     private javax.swing.JButton openConversation;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchInputField;
