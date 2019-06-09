@@ -49,6 +49,8 @@ public class InterfataUser extends javax.swing.JFrame{
     public InterfataUser() throws SQLException{
     try{
         initComponents();
+            jTextArea2.setVisible(false);
+            ChangeTitle.setVisible(false);
             NextPhoto.setVisible(false);
             button2.setVisible(false);
             DisplayImages.setVisible(false);
@@ -56,6 +58,8 @@ public class InterfataUser extends javax.swing.JFrame{
             addPhotoButton.setVisible(false);
             sendButton.setVisible(false);
             jTextField1.setVisible(false);
+            jTextArea2.setEnabled(false);
+            ChangeTitle.setEnabled(false);
             NextPhoto.setEnabled(false);
             jTextArea1.setEnabled(false);
             addPhotoButton.setEnabled(false);
@@ -104,16 +108,21 @@ public class InterfataUser extends javax.swing.JFrame{
         DisplayImages = new javax.swing.JButton();
         label = new javax.swing.JLabel();
         NextPhoto = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        ChangeTitle = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WooChatApp");
         setBackground(new java.awt.Color(102, 102, 102));
-        setPreferredSize(new java.awt.Dimension(1140, 500));
+        setPreferredSize(new java.awt.Dimension(1140, 600));
         setResizable(false);
-        setSize(new java.awt.Dimension(1140, 500));
+        setSize(new java.awt.Dimension(1140, 600));
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1122, 500));
+        jPanel1.setEnabled(false);
+        jPanel1.setPreferredSize(new java.awt.Dimension(1122, 600));
 
         userLoggedName.setBackground(new java.awt.Color(102, 102, 102));
         userLoggedName.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -251,6 +260,25 @@ public class InterfataUser extends javax.swing.JFrame{
             }
         });
 
+        jScrollPane3.setBackground(new java.awt.Color(102, 102, 102));
+        jScrollPane3.setBorder(null);
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        jTextArea2.setBackground(new java.awt.Color(102, 102, 102));
+        jTextArea2.setColumns(20);
+        jTextArea2.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea2);
+
+        ChangeTitle.setText("Change Title");
+        ChangeTitle.setEnabled(false);
+        ChangeTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChangeTitleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -258,86 +286,97 @@ public class InterfataUser extends javax.swing.JFrame{
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userLoggedName)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(userTextLabel))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(searchButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(openConversation, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(openConversation, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(userTextLabel))
+                    .addComponent(userLoggedName))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ChangeTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DisplayImages, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addPhotoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(button2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(addPhotoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                            .addComponent(DisplayImages, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
+                                .addGap(76, 76, 76)
                                 .addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(133, 133, 133)
-                                .addComponent(NextPhoto)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(182, 182, 182)
+                                .addComponent(NextPhoto))))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(586, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(userLoggedName)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(userLoggedName)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ChangeTitle))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(userTextLabel)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
+                        .addGap(77, 77, 77)
                         .addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(NextPhoto)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(searchButton)
-                            .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(openConversation))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(NextPhoto))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(sendButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addPhotoButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)
-                        .addComponent(DisplayImages)
-                        .addContainerGap(24, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(userTextLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addGap(16, 16, 16)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sendButton))
+                                .addGap(3, 3, 3)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(addPhotoButton)
+                                    .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(openConversation)
+                                    .addComponent(searchInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(searchButton))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(DisplayImages)))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1602, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1724, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -365,6 +404,7 @@ public class InterfataUser extends javax.swing.JFrame{
                 Image in = image.getImage();
                 listaImagini.add(in);
             }   
+            con.close();
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -399,7 +439,7 @@ public class InterfataUser extends javax.swing.JFrame{
             stmtInser.setInt(2, this.idconv);
             stmtInser.setBytes(3,imagineDeTrimis);
             stmtInser.executeUpdate();
-
+            con.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(InterfataUser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -430,6 +470,7 @@ public class InterfataUser extends javax.swing.JFrame{
             {
                 this.idconv = rs.getInt("idconv");
             }
+            con.close();
         }catch(Exception e)
         {
             System.out.println(e.getMessage());
@@ -446,6 +487,7 @@ public class InterfataUser extends javax.swing.JFrame{
             stmtInser.setInt(2, this.idconv);
             stmtInser.setString(3,jTextField1.getText().toString());
             stmtInser.executeUpdate();
+            con.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -474,6 +516,7 @@ public class InterfataUser extends javax.swing.JFrame{
                 conversatie = user + ": " + textAfisat + "\n";
                 jTextArea1.append(conversatie);
             }
+            con.close();
         }catch(Exception e)
         {
             System.out.println(e.getMessage());
@@ -522,6 +565,9 @@ public class InterfataUser extends javax.swing.JFrame{
                 System.out.println("Conversatia nu exista, deci se va creea...");
                 if(!(jTable1.getSelectionModel().isSelectionEmpty()))
                 {
+                    jTextArea2.setVisible(true);
+                    jTextArea2.append(emailinitiator+" "+emailreceptor);
+                    ChangeTitle.setVisible(true);
                     NextPhoto.setVisible(true);
                     button2.setVisible(true);
                     DisplayImages.setVisible(true);
@@ -529,6 +575,8 @@ public class InterfataUser extends javax.swing.JFrame{
                     addPhotoButton.setVisible(true);
                     sendButton.setVisible(true);
                     jTextField1.setVisible(true);
+                    jTextArea2.setEnabled(true);
+                    ChangeTitle.setEnabled(true);
                     NextPhoto.setEnabled(true);
                     button2.setEnabled(true);
                     DisplayImages.setEnabled(true);
@@ -542,11 +590,15 @@ public class InterfataUser extends javax.swing.JFrame{
                     stmtInser.setString(2, this.emailinitiator);
                     stmtInser.setString(3, this.emailreceptor);
                     stmtInser.executeUpdate();
+                    
+                    con.close();
                 }
             }
             if(convIncep)
             {
                 System.out.println("Conversatia exista deja...");
+                jTextArea2.setVisible(true);
+                ChangeTitle.setVisible(true);
                 NextPhoto.setVisible(true);
                 button2.setVisible(true);
                 DisplayImages.setVisible(true);
@@ -554,6 +606,8 @@ public class InterfataUser extends javax.swing.JFrame{
                 addPhotoButton.setVisible(true);
                 sendButton.setVisible(true);
                 jTextField1.setVisible(true);
+                jTextArea2.setEnabled(true);
+                ChangeTitle.setEnabled(true);
                 NextPhoto.setEnabled(true);
                 button2.setEnabled(true);
                 DisplayImages.setEnabled(true);
@@ -561,6 +615,21 @@ public class InterfataUser extends javax.swing.JFrame{
                 addPhotoButton.setEnabled(true);
                 sendButton.setEnabled(true);
                 jTextField1.setEnabled(true);
+                try {
+                    Statement st;
+                    con = getConnection();
+                    st = con.createStatement();
+                    String queryInsert = "SELECT * FROM conversations WHERE idconv = '"+this.idconv+"'";
+                        rs=st.executeQuery(queryInsert);
+                        if(rs.next())
+                        {
+                            String nume = rs.getNString("nume");
+                            System.out.println(nume);
+                            jTextArea2.append(nume);
+                        }
+                } catch (SQLException ex) {
+                    Logger.getLogger(InterfataUser.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -582,6 +651,24 @@ public class InterfataUser extends javax.swing.JFrame{
         count++;
         }
     }//GEN-LAST:event_NextPhotoActionPerformed
+
+    private void ChangeTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangeTitleActionPerformed
+        // TODO add your handling code here:
+        Connection con;
+            PreparedStatement pst;
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dxm4AFuYMf?useSSL=false","dxm4AFuYMf","sdsKcU3uUv");
+            String queryInsert = "UPDATE conversations SET nume='"+jTextArea2.getText().toString()+"' WHERE idconv='"+this.idconv+"'";
+            PreparedStatement stmtInser = con.prepareStatement(queryInsert);
+            stmtInser.executeUpdate();
+            
+                    con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfataUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+
+    }//GEN-LAST:event_ChangeTitleActionPerformed
 
     
     public ArrayList<User> afiseazaUseri(String cautare){
@@ -668,6 +755,7 @@ public class InterfataUser extends javax.swing.JFrame{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ChangeTitle;
     private javax.swing.JButton DisplayImages;
     private javax.swing.JButton NextPhoto;
     private javax.swing.JButton addPhotoButton;
@@ -675,8 +763,11 @@ public class InterfataUser extends javax.swing.JFrame{
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel label;
     private javax.swing.JButton openConversation;
